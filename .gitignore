@@ -1,36 +1,25 @@
-# Prerequisites
-*.d
+# IDEs
+.idea/
+.vscode/
 
-# if use clion
-.idea
-cmake-build-debug
-
-# Compiled Object files
-*.slo
-*.lo
+# Compilados
 *.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
+*.out
+*.exe
+*.a
 *.so
 *.dylib
-*.dll
 
-# Fortran module files
-*.mod
-*.smod
+# CMake
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# Cobertura
+*.gcov
+*.gcda
+*.gcno
+coverage/
+coverage_html/
