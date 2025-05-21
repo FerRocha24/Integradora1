@@ -27,6 +27,7 @@ jobs:
       - name: Configure CMake
         run: |
           rm -rf build
+          rm -f CMakeCache.txt
           cmake -S . -B build -DENABLE_TESTING=ON -DENABLE_COVERAGE=ON
 
       # 4. Compila el proyecto y los tests

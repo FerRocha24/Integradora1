@@ -1,49 +1,40 @@
 cmake_minimum_required(VERSION 3.30)
 
-# Nombre del proyecto
-project(sonarqube_unit_test VERSION 1.0.0 LANGUAGES C CXX)
-
-# Configuración global de CMake
+project(analizador_transmisiones VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Incluir los archivos de cabecera
+# Incluir headers
 include_directories(${CMAKE_SOURCE_DIR})
 
-# Archivos fuente principales
-set(SOURCES
-        main.cpp
-        sum.h
-        sub.h
-        div.h
+# Ejecutable principal
+add_executable(main
+    main.cpp
+    utils.h
+    analizador.h
 )
 
-# Crear el ejecutable principal
-add_executable(main ${SOURCES})
-
 # Opciones
-option(ENABLE_TESTING "Enable a Unit Testing build." ON)
+option(ENABLE_TESTING "Enable unit testing" ON)
 option(ENABLE_COVERAGE "Enable coverage reporting" ON)
 
-# Si se habilita la cobertura, establecer flags
 if (ENABLE_COVERAGE)
-    message(STATUS "Enabling coverage flags for GCC/Clang")
+    message(STATUS "Coverage enabled")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 endif()
 
-# Descarga GoogleTest usando FetchContent
+# Fetch GoogleTest
 include(FetchContent)
 FetchContent_Declare(
-        googletest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG release-1.11.0
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG release-1.11.0
 )
 FetchContent_MakeAvailable(googletest)
 
-# Si se habilitan las pruebas, agrega GoogleTest y las pruebas unitarias
-if(ENABLE_TESTING)
+if (ENABLE_TESTING)
     enable_testing()
 
     function(add_test_executable name source)
@@ -57,23 +48,19 @@ if(ENABLE_TESTING)
         add_test(NAME ${name} COMMAND ${name})
     endfunction()
 
-    # Archivos de pruebas
-    add_test_executable(test_sum test/test_sum.cpp)
-    add_test_executable(test_sub test/test_sub.cpp)
-    add_test_executable(test_divide test/test_divide.cpp)
+    add_test_executable(test_busqueda test/test_busqueda.cpp)
+    add_test_executable(test_palindromo test/test_palindromo.cpp)
+    add_test_executable(test_substring test/test_substring.cpp)
 
-    # Generar reportes de cobertura
     if (ENABLE_COVERAGE)
         find_program(LCOV lcov)
         if (LCOV)
             add_custom_target(coverage
-                    COMMAND lcov --capture --directory . --output-file build/coverage.info
-                    COMMAND genhtml build/coverage.info --output-directory build/coverage_html
-                    COMMENT "Generating code coverage report"
-                    VERBATIM
+                COMMAND lcov --capture --directory . --output-file build/coverage.info
+                COMMAND genhtml build/coverage.info --output-directory build/coverage_html
+                COMMENT "Generando reporte de cobertura"
+                VERBATIM
             )
-        else()
-            message(WARNING "LCOV not found, coverage reporting will not be available")
         endif()
     endif()
 endif()
