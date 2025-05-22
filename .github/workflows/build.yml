@@ -1,4 +1,4 @@
-name: Build and Analyze
+name: Build and Test Workflow
 
 on:
   push:
@@ -6,56 +6,87 @@ on:
       - main
 
 jobs:
-  build:
-    name: Build, Test and Analyze
+  tests:
+    name: Run Unit Tests
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Clona el repositorio con historial completo
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      # 2. Instala dependencias necesarias
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++ lcov gcovr
+          sudo apt-get install -y cmake build-essential lcov gcovr
 
-      # 3. Configura el proyecto con flags de cobertura
-      - name: Configure CMake
+      - name: Configure Build System
         run: |
-          rm -rf build
-          rm -f CMakeCache.txt
-          cmake -S . -B build -DENABLE_TESTING=ON -DENABLE_COVERAGE=ON
+          mkdir -p build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTING=ON -DENABLE_COVERAGE=ON ..
 
-      # 4. Compila el código y pruebas
-      - name: Build
+      - name: Build Project
         run: |
-          cmake --build build
+          cd build
+          cmake --build .
 
-      # 5. Ejecuta pruebas
+      - name: Copy input TXT files for tests
+        run: |
+          cp ../data/*.txt .
+        working-directory: build
+
       - name: Run Unit Tests
         run: |
           cd build
           ctest --output-on-failure
 
-      # 6. Genera reporte de cobertura en formato Cobertura
+      - name: Run Binary to Generate Coverage
+        run: |
+          cd build
+          ./main || true  # evita fallar si ./main regresa código distinto a 0
+
+      - name: List Coverage Files
+        run: |
+          cd build
+          find . -name "*.gcda"
+
       - name: Generate Coverage Report
         run: |
-          gcovr -r . --cobertura -o build/coverage.xml --exclude test/test/ --exclude main.cpp --print-summary
+          cd build
+          lcov --capture --directory . --output-file coverage.info --ignore-errors mismatch
+          gcovr --root .. --exclude 'test/test/*' --exclude 'build/*' --exclude 'main.cpp' --sonarqube -o coverage.xml --print-summary
 
-      # 7. Ejecuta análisis con SonarQube
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: build/coverage.xml
+
+  build_analysis:
+    name: Build and Analyze
+    runs-on: ubuntu-latest
+    needs: tests
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download Coverage Report
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: build/
+
       - name: Run SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@v3
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      # 8. (Opcional) Verifica el Quality Gate
-      # - name: Check SonarQube Quality Gate
-      #   uses: sonarsource/sonarqube-quality-gate-action@master
-      #   timeout-minutes: 5
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Check SonarQube Quality Gate
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

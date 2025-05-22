@@ -11,6 +11,7 @@
 #ifndef ANALIZADOR_H
 #define ANALIZADOR_H
 
+#include "utils.h"
 #include <string>
 #include <tuple>
 #include <vector>
