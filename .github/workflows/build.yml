@@ -35,6 +35,9 @@ jobs:
           cd build
           ctest --output-on-failure
 
+      - name: Copy input TXT files for tests
+        run: cp data/*.txt build/
+
       - name: Run Binary to Generate Coverage
         run: |
           cd build
