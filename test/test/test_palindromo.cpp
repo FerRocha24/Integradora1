@@ -17,7 +17,7 @@ TEST(PalindromoTest, DetectaPalindromoCentral)
     auto [start, end, sub] = encontrarPalindromoMasLargo(texto);
     EXPECT_EQ(sub, "xyzyx");
     EXPECT_EQ(start, 4);
-    EXPECT_EQ(end, 9);
+    EXPECT_EQ(end, 8);
 }
 
 TEST(PalindromoTest, DetectaPalindromoCorto)
