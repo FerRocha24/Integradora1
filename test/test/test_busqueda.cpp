@@ -1,5 +1,6 @@
 #include <string>
 #include <fstream>
+#include <cstdio>
 #include "analizador.h"
 #include "gtest/gtest.h"
 
@@ -20,8 +21,7 @@ TEST(BusquedaTest, CodigoAusente)
     string texto = "abcdef";
     string codigo = "xyz";
     int pos;
-    bool encontrado = buscarCodigo(texto, codigo, pos);
-    EXPECT_FALSE(encontrado);
+    EXPECT_FALSE(buscarCodigo(texto, codigo, pos));
 }
 
 TEST(BusquedaTest, CodigoAlInicio)
@@ -29,16 +29,13 @@ TEST(BusquedaTest, CodigoAlInicio)
     string texto = "abcxyz";
     string codigo = "abc";
     int pos;
-    bool encontrado = buscarCodigo(texto, codigo, pos);
-    EXPECT_TRUE(encontrado);
+    EXPECT_TRUE(buscarCodigo(texto, codigo, pos));
     EXPECT_EQ(pos, 0);
 }
 
 TEST(ArchivoTest, LeeArchivoDeTransmision)
 {
-    string contenido = leerArchivo("transmission1.txt");
-
+    std::string contenido = leerArchivo("transmission1.txt");
     EXPECT_FALSE(contenido.empty());
-
-    EXPECT_NE(contenido.find("MCODE"), string::npos);
+    EXPECT_NE(contenido.find("3Afe44c79f00b29F0CDC9ecd69d0D61186DAA1e356BB9c4d34"), std::string::npos);
 }
