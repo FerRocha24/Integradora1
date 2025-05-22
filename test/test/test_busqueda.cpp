@@ -1,6 +1,8 @@
-#include <gtest/gtest.h>
+#include <string>
 #include "analizador.h"
-#include "utils.h"
+#include "gtest/gtest.h"
+
+using std::string;
 
 TEST(BusquedaTest, CodigoPresente)
 {
