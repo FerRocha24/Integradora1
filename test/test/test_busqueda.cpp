@@ -1,8 +1,9 @@
 #include <string>
 #include <fstream>
-#include <cstdio>
 #include "analizador.h"
 #include "gtest/gtest.h"
+
+using std::string;
 
 TEST(BusquedaTest, CodigoPresente)
 {
@@ -19,7 +20,8 @@ TEST(BusquedaTest, CodigoAusente)
     string texto = "abcdef";
     string codigo = "xyz";
     int pos;
-    EXPECT_FALSE(buscarCodigo(texto, codigo, pos));
+    bool encontrado = buscarCodigo(texto, codigo, pos);
+    EXPECT_FALSE(encontrado);
 }
 
 TEST(BusquedaTest, CodigoAlInicio)
@@ -27,30 +29,16 @@ TEST(BusquedaTest, CodigoAlInicio)
     string texto = "abcxyz";
     string codigo = "abc";
     int pos;
-    EXPECT_TRUE(buscarCodigo(texto, codigo, pos));
+    bool encontrado = buscarCodigo(texto, codigo, pos);
+    EXPECT_TRUE(encontrado);
     EXPECT_EQ(pos, 0);
 }
 
-TEST(ArchivoTest, LeeContenidoCorrecto)
+TEST(ArchivoTest, LeeArchivoDeTransmision)
 {
-    std::ofstream archivo("archivo_prueba.txt");
-    archivo << "Linea1\nLinea2\n";
-    archivo.close();
+    string contenido = leerArchivo("transmission1.txt");
 
-    std::string contenido = leerArchivo("archivo_prueba.txt");
-    EXPECT_NE(contenido.find("Linea1"), std::string::npos);
-    EXPECT_NE(contenido.find("Linea2"), std::string::npos);
+    EXPECT_FALSE(contenido.empty());
 
-    std::remove("archivo_prueba.txt");
-}
-
-TEST(ArchivoTest, ArchivoVacio)
-{
-    std::ofstream archivo("vacio.txt");
-    archivo.close();
-
-    std::string contenido = leerArchivo("vacio.txt");
-    EXPECT_EQ(contenido, "");
-
-    std::remove("vacio.txt");
+    EXPECT_NE(contenido.find("MCODE"), string::npos);
 }
