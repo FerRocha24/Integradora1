@@ -44,7 +44,8 @@ jobs:
       # 6. Genera reporte de cobertura en formato compatible con SonarQube
       - name: Generate Coverage Report
         run: |
-          gcovr -r . --xml -o build/coverage.xml --exclude test/ --exclude main.cpp --print-summary
+          gcovr -r . --xml-pretty -o build/coverage.xml --exclude test/ --exclude main.cpp --print-summary
+
 
       # 7. Ejecuta análisis de código con SonarQube
       - name: Run SonarQube Scan
