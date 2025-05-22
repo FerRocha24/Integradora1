@@ -35,7 +35,7 @@ TEST(BusquedaTest, CodigoAlInicio)
 
 TEST(ArchivoTest, LeeArchivoDeTransmision)
 {
-    std::string contenido = leerArchivo("transmission1.txt");
+    std::string contenido = leerArchivo("../data/transmission1.txt");
     EXPECT_FALSE(contenido.empty());
     EXPECT_NE(contenido.find("3Afe44c79f00b29F0CDC9ecd69d0D61186DAA1e356BB9c4d34"), std::string::npos);
 }
