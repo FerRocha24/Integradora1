@@ -77,3 +77,27 @@ TEST(BusquedaTest, AmbosVacios)
     EXPECT_TRUE(buscarCodigo(texto, codigo, pos));
     EXPECT_EQ(pos, 0);
 }
+
+TEST(ArchivoTest, LeerArchivoConContenido)
+{
+    std::ofstream archivo("temp_test.txt");
+    archivo << "Linea1\nLinea2\n";
+    archivo.close();
+
+    std::string contenido = leerArchivo("temp_test.txt");
+    EXPECT_NE(contenido.find("Linea1"), std::string::npos);
+    EXPECT_NE(contenido.find("Linea2"), std::string::npos);
+
+    std::remove("temp_test.txt");
+}
+
+TEST(ArchivoTest, LeerArchivoVacio)
+{
+    std::ofstream archivo("archivo_vacio.txt");
+    archivo.close();
+
+    std::string contenido = leerArchivo("archivo_vacio.txt");
+    EXPECT_TRUE(contenido.empty());
+
+    std::remove("archivo_vacio.txt");
+}
