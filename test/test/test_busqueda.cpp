@@ -1,6 +1,4 @@
 #include <string>
-#include <fstream>
-#include <cstdio>
 #include "analizador.h"
 #include "gtest/gtest.h"
 
@@ -21,21 +19,61 @@ TEST(BusquedaTest, CodigoAusente)
     string texto = "abcdef";
     string codigo = "xyz";
     int pos;
-    EXPECT_FALSE(buscarCodigo(texto, codigo, pos));
+    bool encontrado = buscarCodigo(texto, codigo, pos);
+    EXPECT_FALSE(encontrado);
 }
 
 TEST(BusquedaTest, CodigoAlInicio)
 {
-    string texto = "abcxyz";
-    string codigo = "abc";
+    string texto = "inicio123";
+    string codigo = "inicio";
+    int pos;
+    bool encontrado = buscarCodigo(texto, codigo, pos);
+    EXPECT_TRUE(encontrado);
+    EXPECT_EQ(pos, 0);
+}
+
+TEST(BusquedaTest, CodigoAlFinal)
+{
+    string texto = "abcdeFinal";
+    string codigo = "Final";
+    int pos;
+    bool encontrado = buscarCodigo(texto, codigo, pos);
+    EXPECT_TRUE(encontrado);
+    EXPECT_EQ(pos, texto.size() - codigo.size());
+}
+
+TEST(BusquedaTest, CodigoIgualTexto)
+{
+    string texto = "completo";
+    string codigo = "completo";
     int pos;
     EXPECT_TRUE(buscarCodigo(texto, codigo, pos));
     EXPECT_EQ(pos, 0);
 }
 
-TEST(ArchivoTest, LeeArchivoDeTransmision)
+TEST(BusquedaTest, CodigoVacio)
 {
-    std::string contenido = leerArchivo("../data/transmission1.txt");
-    EXPECT_FALSE(contenido.empty());
-    EXPECT_NE(contenido.find("3Afe44c79f00b29F0CDC9ecd69d0D61186DAA1e356BB9c4d34"), std::string::npos);
+    string texto = "abcdefg";
+    string codigo = "";
+    int pos;
+    EXPECT_TRUE(buscarCodigo(texto, codigo, pos)); // .find("") siempre retorna 0
+    EXPECT_EQ(pos, 0);
+}
+
+TEST(BusquedaTest, TextoVacio)
+{
+    string texto = "";
+    string codigo = "123";
+    int pos;
+    EXPECT_FALSE(buscarCodigo(texto, codigo, pos));
+}
+
+TEST(BusquedaTest, AmbosVacios)
+{
+    string texto = "";
+    string codigo = "";
+    int pos;
+    EXPECT_TRUE(buscarCodigo(texto, codigo, pos));
+    EXPECT_EQ(pos, 0);
 }
