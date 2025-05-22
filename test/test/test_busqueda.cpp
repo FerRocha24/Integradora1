@@ -119,3 +119,19 @@ TEST(ArchivoTest, LeerArchivoNoExiste)
     std::string contenido = leerArchivo("archivo_que_no_existe.txt");
     EXPECT_TRUE(contenido.empty());
 }
+
+TEST(ArchivoTest, LeerArchivosExistentes)
+{
+    std::vector<std::string> archivos = {
+        "data/transmission1.txt",
+        "data/transmission2.txt",
+        "data/mcode1.txt",
+        "data/mcode2.txt",
+        "data/mcode3.txt"};
+
+    for (const auto &archivo : archivos)
+    {
+        std::string contenido = leerArchivo(archivo);
+        EXPECT_FALSE(contenido.empty()) << "Archivo vacío o no leído: " << archivo;
+    }
+}

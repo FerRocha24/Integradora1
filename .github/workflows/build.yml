@@ -31,9 +31,9 @@ jobs:
           cmake --build .
 
       - name: Copy input TXT files for tests
-        run: |
-          cp ../data/*.txt .
+        run: cp -r ../data .
         working-directory: build
+
 
       - name: Run Unit Tests
         run: |
