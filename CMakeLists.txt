@@ -8,6 +8,17 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Incluir headers
 include_directories(${CMAKE_SOURCE_DIR})
 
+# Opciones
+option(ENABLE_TESTING "Enable unit testing" ON)
+option(ENABLE_COVERAGE "Enable coverage reporting" ON)
+
+# Flags de cobertura y depuración
+if (ENABLE_COVERAGE)
+    message(STATUS "Coverage enabled")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g --coverage -fprofile-arcs -ftest-coverage")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+endif()
+
 # Ejecutable principal
 add_executable(main
     main.cpp
@@ -15,17 +26,7 @@ add_executable(main
     analizador.h
 )
 
-# Opciones
-option(ENABLE_TESTING "Enable unit testing" ON)
-option(ENABLE_COVERAGE "Enable coverage reporting" ON)
-
-if (ENABLE_COVERAGE)
-    message(STATUS "Coverage enabled")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
-endif()
-
-# Fetch GoogleTest
+# GoogleTest
 include(FetchContent)
 FetchContent_Declare(
     googletest
@@ -34,24 +35,29 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+# Configuración de pruebas
 if (ENABLE_TESTING)
     enable_testing()
 
     function(add_test_executable name source)
-        add_executable(${name} ${source})
+        add_executable(${name} ${source} analizador.h utils.h)
         target_link_libraries(${name} PRIVATE gtest gtest_main)
+
         if (ENABLE_COVERAGE)
             target_link_libraries(${name} PRIVATE gcov)
-            target_compile_options(${name} PRIVATE --coverage -fprofile-arcs -ftest-coverage)
+            target_compile_options(${name} PRIVATE -g --coverage -fprofile-arcs -ftest-coverage)
             target_link_options(${name} PRIVATE --coverage)
         endif()
+
         add_test(NAME ${name} COMMAND ${name})
     endfunction()
 
+    # Agregar ejecutables de prueba
     add_test_executable(test_busqueda test/test/test_busqueda.cpp)
     add_test_executable(test_palindromo test/test/test_palindromo.cpp)
     add_test_executable(test_substring test/test/test_substring.cpp)
 
+    # Reporte de cobertura con LCOV (opcional)
     if (ENABLE_COVERAGE)
         find_program(LCOV lcov)
         if (LCOV)
