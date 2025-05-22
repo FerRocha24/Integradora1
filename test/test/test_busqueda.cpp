@@ -101,3 +101,21 @@ TEST(ArchivoTest, LeerArchivoVacio)
 
     std::remove("archivo_vacio.txt");
 }
+
+TEST(ArchivoTest, LeerArchivoUnaLinea)
+{
+    std::ofstream archivo("una_linea.txt");
+    archivo << "SoloUnaLinea";
+    archivo.close();
+
+    std::string contenido = leerArchivo("una_linea.txt");
+    EXPECT_EQ(contenido, "SoloUnaLinea\n");
+
+    std::remove("una_linea.txt");
+}
+
+TEST(ArchivoTest, LeerArchivoNoExiste)
+{
+    std::string contenido = leerArchivo("archivo_que_no_existe.txt");
+    EXPECT_TRUE(contenido.empty());
+}
