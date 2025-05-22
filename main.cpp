@@ -26,11 +26,11 @@ void verificarYMostrar(const string &transmissionOriginal, const string &mcodeOr
 
 int main()
 {
-    string t1 = leerArchivo("data/transmission1.txt");
-    string t2 = leerArchivo("data/transmission2.txt");
-    string m1 = leerArchivo("data/mcode1.txt");
-    string m2 = leerArchivo("data/mcode2.txt");
-    string m3 = leerArchivo("data/mcode3.txt");
+    string t1 = leerArchivo("transmission1.txt");
+    string t2 = leerArchivo("transmission2.txt");
+    string m1 = leerArchivo("mcode1.txt");
+    string m2 = leerArchivo("mcode2.txt");
+    string m3 = leerArchivo("mcode3.txt");
 
     // Parte 1: búsqueda de códigos
     verificarYMostrar(t1, m1);

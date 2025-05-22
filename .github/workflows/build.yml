@@ -30,9 +30,6 @@ jobs:
           cd build
           cmake --build .
 
-      - name: Copy input TXT files for tests
-        run: cp -r data build/data
-
       - name: Run Unit Tests
         run: |
           cd build

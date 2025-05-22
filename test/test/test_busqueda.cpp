@@ -123,11 +123,11 @@ TEST(ArchivoTest, LeerArchivoNoExiste)
 TEST(ArchivoTest, LeerArchivosExistentes)
 {
     std::vector<std::string> archivos = {
-        "data/transmission1.txt",
-        "data/transmission2.txt",
-        "data/mcode1.txt",
-        "data/mcode2.txt",
-        "data/mcode3.txt"};
+        "transmission1.txt",
+        "transmission2.txt",
+        "mcode1.txt",
+        "mcode2.txt",
+        "mcode3.txt"};
 
     for (const auto &archivo : archivos)
     {
