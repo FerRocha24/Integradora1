@@ -4,8 +4,6 @@
 #include "analizador.h"
 #include "gtest/gtest.h"
 
-using std::string;
-
 TEST(BusquedaTest, CodigoPresente)
 {
     string texto = "abc123xyz";
@@ -24,6 +22,15 @@ TEST(BusquedaTest, CodigoAusente)
     EXPECT_FALSE(buscarCodigo(texto, codigo, pos));
 }
 
+TEST(BusquedaTest, CodigoAlInicio)
+{
+    string texto = "abcxyz";
+    string codigo = "abc";
+    int pos;
+    EXPECT_TRUE(buscarCodigo(texto, codigo, pos));
+    EXPECT_EQ(pos, 0);
+}
+
 TEST(ArchivoTest, LeeContenidoCorrecto)
 {
     std::ofstream archivo("archivo_prueba.txt");
@@ -35,4 +42,15 @@ TEST(ArchivoTest, LeeContenidoCorrecto)
     EXPECT_NE(contenido.find("Linea2"), std::string::npos);
 
     std::remove("archivo_prueba.txt");
+}
+
+TEST(ArchivoTest, ArchivoVacio)
+{
+    std::ofstream archivo("vacio.txt");
+    archivo.close();
+
+    std::string contenido = leerArchivo("vacio.txt");
+    EXPECT_EQ(contenido, "");
+
+    std::remove("vacio.txt");
 }
