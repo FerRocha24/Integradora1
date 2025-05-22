@@ -27,3 +27,12 @@ TEST(SubstringTest, SubcadenaCompleta)
     auto [start, end, sub] = substringComunMasLargo(a, b);
     EXPECT_EQ(sub, "abcdef");
 }
+
+TEST(SubstringTest, SinCoincidencia)
+{
+    string a = "abc";
+    string b = "xyz";
+    auto [start, end, sub] = substringComunMasLargo(a, b);
+    EXPECT_EQ(sub, "");
+    EXPECT_EQ(end - start, -1); // nada encontrado
+}

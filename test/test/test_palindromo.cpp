@@ -37,3 +37,12 @@ TEST(PalindromoTest, PalindromoUnCaracter)
     EXPECT_TRUE(start >= 0);
     EXPECT_TRUE(end >= 0);
 }
+
+TEST(PalindromoTest, PalindromoTodaLaCadena)
+{
+    string texto = "abcba";
+    auto [start, end, pal] = encontrarPalindromoMasLargo(texto);
+    EXPECT_EQ(pal, "abcba");
+    EXPECT_EQ(start, 1);
+    EXPECT_EQ(end, 5);
+}
