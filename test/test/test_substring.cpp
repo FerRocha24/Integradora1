@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
-#include "../analizador.h"
+#include "analizador.h"
+#include "utils.h"
 
 TEST(SubstringTest, DetectaComun)
 {
