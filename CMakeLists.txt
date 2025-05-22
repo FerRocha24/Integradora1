@@ -48,9 +48,9 @@ if (ENABLE_TESTING)
         add_test(NAME ${name} COMMAND ${name})
     endfunction()
 
-    add_test_executable(test_busqueda test/test_busqueda.cpp)
-    add_test_executable(test_palindromo test/test_palindromo.cpp)
-    add_test_executable(test_substring test/test_substring.cpp)
+    add_test_executable(test_busqueda test/test/test_busqueda.cpp)
+    add_test_executable(test_palindromo test/test/test_palindromo.cpp)
+    add_test_executable(test_substring test/test/test_substring.cpp)
 
     if (ENABLE_COVERAGE)
         find_program(LCOV lcov)
